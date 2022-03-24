@@ -21,11 +21,29 @@ class AuthController:
         if auth_data["method"] == "token":
             return TokenAuthController(vault_provider, auth_data["token"])
         elif auth_data["method"] == "approle":
-            return AppRoleAuthController(
-                vault_provider, auth_data["role_id"], auth_data["secret_id"]
-            )
+            role_id = cls._maybe_get_from_file(auth_data, "role_id")
+            secret_id = cls._maybe_get_from_file(auth_data, "secret_id")
+            return AppRoleAuthController(vault_provider, role_id, secret_id)
         else:
             raise ValueError(f'Unexpected auth method {auth_data["method"]}')
+
+    @classmethod
+    def _maybe_get_from_file(cls, data, attr_name):
+        if attr_name in data:
+            return data[attr_name]
+
+        try:
+            filename = data[f"{attr_name}_file"]
+        except KeyError:
+            raise ValueError(
+                f'Configure either "{attr_name}" or "{attr_name}_file" attribute.'
+            )
+
+        try:
+            with open(filename, "r") as fh:
+                return fh.read()
+        except FileNotFoundError:
+            raise ValueError(f'File "{filename}" attribute not found.')
 
 
 class TokenAuthController(AuthController):

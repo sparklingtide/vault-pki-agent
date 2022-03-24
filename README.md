@@ -42,6 +42,13 @@ Example:
 }
 ```
 
+### Authentication
+
+Now only two auth methods are implemented:
+- *token*: You must define *token* property (it can contain root token)
+- *approle*: You must define *role_id* and *secret_id* properties. Also you can use *role_id_file*
+  and *secret_id_file* properties if you want to read *role_id* and *secret_id* from files.
+
 ## Release
 
 1. Bump version in `pyproject.toml` and `__init__.py` files
