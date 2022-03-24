@@ -61,6 +61,7 @@ async def main():
     await auth_controller.login()
 
     watchers = []
+
     for certificate in config["certificates"]:
         watchers.append(
             CertificatesWatcher(
@@ -72,12 +73,15 @@ async def main():
                 hook=certificate.get("hook"),
             )
         )
-    watchers.append(
-        CRLWatcher(
-            pki_provider=pki_provider,
-            destination=pathlib.Path(config["crl"]["destination"]),
+
+    crl = config.get("crl")
+    if crl:
+        watchers.append(
+            CRLWatcher(
+                pki_provider=pki_provider,
+                destination=pathlib.Path(crl["destination"]),
+            )
         )
-    )
     await asyncio.gather(
         *[watcher.watch() for watcher in watchers], auth_controller.run()
     )
