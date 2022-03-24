@@ -5,6 +5,8 @@ import logging
 import logging.config
 import pathlib
 
+import vault_pki_agent
+
 from .auth import AuthController
 from .pki_provider import VaultPKIProvider
 from .watchers.certificates import CertificatesWatcher
@@ -38,6 +40,9 @@ def configure_logging(log_level):
 
 async def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-v", "--version", action="version", version=vault_pki_agent.__version__
+    )
     parser.add_argument("-c", "--config", dest="config", help="json config to use")
     parser.add_argument(
         "-l",
