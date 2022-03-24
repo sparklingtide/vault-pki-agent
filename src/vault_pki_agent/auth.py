@@ -43,7 +43,7 @@ class AuthController:
             with open(filename, "r") as fh:
                 return fh.read()
         except FileNotFoundError:
-            raise ValueError(f'File "{filename}" attribute not found.')
+            raise ValueError(f'File "{filename}" not found.')
 
 
 class TokenAuthController(AuthController):
