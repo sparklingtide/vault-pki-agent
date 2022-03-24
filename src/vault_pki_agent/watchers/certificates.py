@@ -66,6 +66,8 @@ class CertificatesWatcher:
         with self.key_destination.open("w") as fh:
             fh.write(key)
 
+        logger.info(f'Certificate "{self.common_name}" successfully renewed.')
+
         await self.run_hook()
 
     async def get_wait_period(self) -> float:
@@ -81,6 +83,7 @@ class CertificatesWatcher:
 
     async def run_hook(self):
         if self.hook:
+            logger.info(f'Run hook "{self.hook}"')
             return_code = subprocess.call(self.hook, shell=True)
             if return_code != 0:
                 logger.critical(
