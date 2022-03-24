@@ -55,7 +55,7 @@ class AppRoleAuthController(AuthController):
         self.lease_duration = resp["auth"]["lease_duration"]
         logger.info(
             "Successfully authenticated. "
-            f"Renew token after {self.renew_after(self.lease_duration)} sec."
+            f"Renew token after {self.renew_after(self.lease_duration):.2f} sec."
         )
 
     async def renew(self) -> int:
@@ -71,7 +71,7 @@ class AppRoleAuthController(AuthController):
             await self.renew()
             logger.info(
                 "Token successfully renewed. "
-                f"Do again after {self.renew_after(self.lease_duration)} sec."
+                f"Do again after {self.renew_after(self.lease_duration):.2f} sec."
             )
 
     def renew_after(self, lease_duration: int):

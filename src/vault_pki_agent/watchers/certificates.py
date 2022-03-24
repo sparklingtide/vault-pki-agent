@@ -48,7 +48,7 @@ class CertificatesWatcher:
                 )
             else:
                 logger.info(
-                    f"Waiting for {seconds_to_wait} sec before "
+                    f"Waiting for {seconds_to_wait:.2f} sec before "
                     f'renewal "{self.common_name}" certificate...'
                 )
                 await asyncio.sleep(seconds_to_wait)

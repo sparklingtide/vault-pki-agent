@@ -33,7 +33,9 @@ class CRLWatcher:
                     " or it's already expires."
                 )
             else:
-                logger.info(f"Waiting for {seconds_to_wait} sec before CRL renewal...")
+                logger.info(
+                    f"Waiting for {seconds_to_wait:.2f} sec before CRL renewal..."
+                )
                 await asyncio.sleep(seconds_to_wait)
                 logger.info("Renew CRL.")
             await self.update()
