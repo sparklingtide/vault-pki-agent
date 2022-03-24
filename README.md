@@ -1,5 +1,7 @@
 # Vault PKI Agent
 
+[![PyPI version](https://badge.fury.io/py/vault-pki-agent.svg)](https://badge.fury.io/py/vault-pki-agent)
+
 Tool for auto-renewal certificates and CRL from Vault PKI.
 
 ## Usage
