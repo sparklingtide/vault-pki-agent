@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "vault-pki-agent"
+version = "0.1.0"
+description = "Tool for auto-renewal certificates and CRL from Vault PKI."
+authors = ["Anatoly Gusev <a.gusev@sparklingtide.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8.10"
+hvac = "^0.11.2"
+cryptography = "^36.0.2"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+pre-commit = "^2.17.0"
+isort = "^5.10.1"
+rope = "^0.23.0"
+flake8 = "^4.0.1"
+
+[tool.poetry.scripts]
+vault-pki-agent = "vault_pki_agent.main:run"
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
