@@ -3,7 +3,9 @@ import logging
 import pathlib
 from datetime import datetime
 
+from requests.exceptions import RequestException
 from cryptography import x509
+from funcy.flow import retry
 
 from vault_pki_agent.pki_provider import BasePKIProvider
 
@@ -41,13 +43,13 @@ class CRLWatcher:
             await self.update()
 
     async def pull(self):
-        crl = self.pki_provider.get_crl()
+        crl = await self._get_crl()
 
         with self.destination.open("w") as fh:
             fh.write(crl)
 
     async def update(self):
-        crl = self.pki_provider.get_crl()
+        crl = await self._get_crl()
         with self.destination.open("r") as fh:
             old_crl = fh.read()
         with self.destination.open("w") as fh:
@@ -59,7 +61,7 @@ class CRLWatcher:
                     "CRL hasn't been updated, rotate it and "
                     "write new one to the destination."
                 )
-                self.pki_provider.rotate_crl()
+                await self._rotate_crl()
                 await self.pull()
 
     async def get_wait_period(self) -> float:
@@ -72,3 +74,11 @@ class CRLWatcher:
                 return (renew_time - datetime.utcnow()).total_seconds()
         except FileNotFoundError:
             return 0
+
+    @retry(tries=3, errors=RequestException, timeout=2)
+    async def _get_crl(self):
+        return self.pki_provider.get_crl()
+
+    @retry(tries=3, errors=RequestException, timeout=2)
+    async def _rotate_crl(self):
+        self.pki_provider.rotate_crl()

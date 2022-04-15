@@ -3,10 +3,12 @@ import logging
 import pathlib
 import subprocess
 import sys
+from requests import RequestException
 from datetime import datetime
 from typing import Optional
 
 from cryptography import x509
+from funcy.flow import retry
 
 from vault_pki_agent.pki_provider import BasePKIProvider
 
@@ -56,10 +58,7 @@ class CertificatesWatcher:
             await self.renew()
 
     async def renew(self):
-        crt, key = self.pki_provider.create_certificate(
-            role=self.role,
-            common_name=self.common_name,
-        )
+        crt, key = await self._create_certificate()
 
         with self.crt_destination.open("w") as fh:
             fh.write(crt)
@@ -90,3 +89,10 @@ class CertificatesWatcher:
                     "Hook returned non-zero code, immediately exit from the agent."
                 )
                 sys.exit(1)
+
+    @retry(tries=3, errors=RequestException, timeout=2)
+    async def _create_certificate(self):
+        return self.pki_provider.create_certificate(
+            role=self.role,
+            common_name=self.common_name,
+        )
