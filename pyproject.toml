@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vault-pki-agent"
-version = "0.4.1"
+version = "0.4.2"
 description = "Tool for auto-renewal certificates and CRL from Vault PKI."
 authors = ["Anatoly Gusev <a.gusev@sparklingtide.com>"]
 license = "MIT"
