@@ -84,5 +84,5 @@ class CRLWatcher:
     async def _rotate_crl(self):
         self.pki_provider.rotate_crl()
 
-    def _validate_crl(self, crl):
-        x509.load_pem_x509_crl(crl)
+    def _validate_crl(self, crl: str):
+        x509.load_pem_x509_crl(crl.encode("utf-8"))
