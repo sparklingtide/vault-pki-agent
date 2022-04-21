@@ -50,6 +50,7 @@ class CRLWatcher:
 
     async def update(self):
         crl = await self._get_crl()
+        self._validate_crl(crl)
         with self.destination.open("r") as fh:
             old_crl = fh.read()
         with self.destination.open("w") as fh:
@@ -82,3 +83,6 @@ class CRLWatcher:
     @retry(tries=3, errors=RequestException, timeout=2)
     async def _rotate_crl(self):
         self.pki_provider.rotate_crl()
+
+    def _validate_crl(self, crl):
+        x509.load_pem_x509_crl(crl)
