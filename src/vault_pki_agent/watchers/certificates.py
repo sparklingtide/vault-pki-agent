@@ -75,7 +75,7 @@ class CertificatesWatcher:
                 cert = x509.load_pem_x509_certificate(fh.read())
                 duration = cert.not_valid_after - cert.not_valid_before
                 renew_after = duration * 2 / 3
-                renew_time = cert.not_valid_after + renew_after
+                renew_time = cert.not_valid_before + renew_after
                 return (renew_time - datetime.utcnow()).total_seconds()
         except FileNotFoundError:
             return 0
